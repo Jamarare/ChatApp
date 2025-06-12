@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 
 namespace ChatClient.MVVM.ViewModel
 {
@@ -28,9 +29,9 @@ namespace ChatClient.MVVM.ViewModel
             _server.connectedEvent += Connected;
             _server.msgReceivedEvent += MessageReceived;
             _server.userDisconnectedEvent += Disconnected;
-            ConnectToServerCommand = new RelayCommand(c => _server.ConnectToServer(Username), c => !string.IsNullOrEmpty(Username));
-            SendMessageCommand = new RelayCommand(c => _server.SendMessage(Message), c => !string.IsNullOrEmpty(Message));
-
+            ConnectToServerCommand = new RelayCommand(c => _server.ConnectToServer(Username),c=>!string.IsNullOrEmpty(Username));
+            SendMessageCommand = new RelayCommand(c => _server.SendMessage(Message),c=>!string.IsNullOrEmpty(Message));
+            
         }
         private void MessageReceived()
         {
@@ -50,11 +51,12 @@ namespace ChatClient.MVVM.ViewModel
                 Username = _server.packetReader.ReadMessage(),
                 UID = _server.packetReader.ReadMessage()
             };
-            if (!Users.Any(u => u.UID == user.UID))
+            if(!Users.Any(u=>u.UID == user.UID))
             {
                 Application.Current.Dispatcher.Invoke(() => Users.Add(user));
             }
 
         }
+
     }
 }

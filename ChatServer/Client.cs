@@ -24,6 +24,7 @@ namespace ChatServer
             UserName = _reader.ReadMessage();
 
             Console.WriteLine($"[{DateTime.Now}]: {UserName} connected!");
+            Program.BroadCastMessage($"{UserName} connected!");
             Task.Run(() => Read());
         }
         void Read()
@@ -32,7 +33,7 @@ namespace ChatServer
             {
                 try
                 {
-                    if (_reader != null)
+                    if(_reader != null)
                     {
                         var opcode = _reader.ReadByte();
                         switch (opcode)
@@ -48,7 +49,7 @@ namespace ChatServer
                         }
                     }
                 }
-                catch (Exception e)
+                catch(Exception e)
                 {
                     Console.WriteLine($"[{DateTime.Now}]: {UserName} disconnected!");
                     Program.BroadCastDisconnect(UID.ToString());

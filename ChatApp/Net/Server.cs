@@ -23,7 +23,8 @@ namespace ChatClient.Net
         {
             if (!_client.Connected)
             {
-                _client.Connect("6.tcp.eu.ngrok.io", 12076); ;
+                //_client.Connect("0.tcp.eu.ngrok.io", 14400);
+                _client.Connect("127.0.0.1", 7891);
                 packetReader = new(_client.GetStream());
                 if (!string.IsNullOrEmpty(username))
                 {
@@ -33,7 +34,7 @@ namespace ChatClient.Net
                     connectionPacket.WriteStr(username);
                     _client.Client.Send(connectionPacket.GetPacketBytes());
                 }
-
+                
             }
             Task.Run(() => ReadPackets());
         }

@@ -3,21 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ChatApp" 
-        xmlns:viewModel="clr-namespace:ChatClient.MVVM.ViewModel"
+        xmlns:local="clr-namespace:ChatApp"
+        xmlns:vm="clr-namespace:ChatClient.MVVM.ViewModel"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-
     <Window.DataContext>
-        <viewModel:MainViewModel/>
+        <vm:MainViewModel/>
     </Window.DataContext>
-    
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
-            <ColumnDefinition />  
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-
         <DockPanel>
             <TextBox Height="25"
                      DockPanel.Dock="Top"
@@ -34,12 +31,9 @@
                 </ListView.ItemTemplate>
             </ListView>
         </DockPanel>
-
-
         <StackPanel Grid.Column="1">
             <ListView Height="380"
                       ItemsSource="{Binding Messages}"/>
-
             <StackPanel Orientation="Horizontal">
                 <TextBox Height="55"
                          Width="545"
@@ -47,7 +41,8 @@
                          Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}"/>
                 <Button Width="55"
                         Content="Send"
-                        Command="{Binding SendMessageCommand}" />
+                        Command="{Binding SendMessageCommand}"/>
+
             </StackPanel>
         </StackPanel>
     </Grid>

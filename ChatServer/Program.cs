@@ -1,19 +1,20 @@
 ﻿using ChatServer.Net.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ChatServer
 {
-    class Program
+    internal class Program
     {
         static TcpListener _listener;
         static List<Client> _clients;
         static void Main(string[] args)
         {
             _clients = new();
-            _listener = new TcpListener(IPAddress.Parse("127.0.0.1"), 7891);
+            _listener = new TcpListener(IPAddress.Parse("0.0.0.0"), 7891);
             _listener.Start();
-            Console.WriteLine("Listening on 127.0.0.1:7891");
+            Console.WriteLine("Listening on localhost:7891");
             while (true)
             {
                 var _client = new Client(_listener.AcceptTcpClient());
@@ -22,17 +23,25 @@ namespace ChatServer
             }
             static void BroadCastConnected()
             {
-                foreach (var client in _clients)
+                try
                 {
-                    foreach (var clientClient in _clients)
+                    foreach (var client in _clients)
                     {
-                        var packet = new PacketBuilder();
-                        packet.WriteOpCode(1);
-                        packet.WriteStr(clientClient.UserName);
-                        packet.WriteStr(clientClient.UID.ToString());
-                        client.ClientSocket.Client.Send(packet.GetPacketBytes());
+                        foreach (var clientClient in _clients)
+                        {
+                            var packet = new PacketBuilder();
+                            packet.WriteOpCode(1);
+                            packet.WriteStr(clientClient.UserName);
+                            packet.WriteStr(clientClient.UID.ToString());
+                            client.ClientSocket.Client.Send(packet.GetPacketBytes());
+                        }
                     }
                 }
+                catch
+                {
+
+                }
+                
             }
         }
         public static void BroadCastMessage(string msg)
@@ -45,7 +54,7 @@ namespace ChatServer
                 client.ClientSocket.Client.Send(packet.GetPacketBytes());
             }
         }
-
+           
         public static void BroadCastDisconnect(string uid)
         {
             try
@@ -62,7 +71,7 @@ namespace ChatServer
                         client.ClientSocket.Client.Send(packet.GetPacketBytes());
 
                     }
-                    BroadCastMessage($"{dClient.UserName} disconnected");
+                    BroadCastMessage($"{dClient.UserName} disconnected!");
                 }
             }
             catch
